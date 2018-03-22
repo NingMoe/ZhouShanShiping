@@ -8,6 +8,12 @@
         <script type="text/javascript" src="http://api.map.baidu.com/library/Heatmap/2.0/src/Heatmap_min.js"></script>
         <title>热力图功能示例</title>
         <!--本地CSS-->
+
+        <!-- 引入样式 -->
+        <!--<link rel="stylesheet" href="https://unpkg.com/element-ui/lib/theme-chalk/index.css">-->
+        <!-- 引入组件库 -->
+
+
         <style type="text/css">
             ul,li{
                 list-style: none;
@@ -25,53 +31,87 @@
                 font-family:"微软雅黑";
             }
 
-            #container{
-                height:95%;
-                width:100%;
-            }
             #r-result{
                 width:100%;
             }
             /*热力图控制台样式*/
-            /*父元素样式*/
+            /*头部样式*/
             #header{
-                height: 5%;
+                background-color: #85d989;
                 width: 100%;
-                background-color: #0d8ddb;
+                height: 36px;
+                position:relative;
             }
-            /*按钮公共样式*/
-            .header_button{
-                height: 100%;
-                width: 100px;
+            /*地图样式*/
+            #container{
+                width: 100%;
+                position: absolute;
+                top: 36px;
+                bottom: 40px;
+                left: 0px;
+            }
+            /*播放界面样式*/
+            #play{
+                width: 100%;
+                height: 40px;
+                position:absolute;
+                left:0;
+                bottom:0;
+                background-color: #3FB8AF;
+            }
+            #player{
+                margin: 0 auto;
+                width: 240px;
+                height: 40px;
+                background-color: #761c19;
+            }
+            /*热力图开关样式*/
+            .btn{
+                margin: 3px 5px 3px 5px;
                 float: right;
-                margin-left: 5px;
-                margin-right: 5px;
+                width: 100px;
+                height: 30px;
             }
-            /*查询按钮样式*/
-            .header_button_select{
-                background-color: #23ad44;
-            }
-            /*关闭查询按钮样式*/
-            .header_button_delete{
-                background-color: saddlebrown;
-            }
-
-            .header_select_ship{
-                height: 100%;
-                width: 150px;
+            /*渔船编号输入框样式*/
+            .input_ship{
                 float: left;
-                margin-left: 5px;
-                margin-right: 5px;
-                background-color: #8a1f11;
+                margin: 3px 5px 3px 5px;
+                border: 1px solid #ccc;
+                padding: 7px 0px;
+                border-radius: 3px;
+                padding-left:5px;
+                -webkit-box-shadow: inset 0 1px 1px rgba(0,0,0,.075);
+                box-shadow: inset 0 1px 1px rgba(0,0,0,.075);
+                -webkit-transition: border-color ease-in-out .15s,-webkit-box-shadow ease-in-out .15s;
+                -o-transition: border-color ease-in-out .15s,box-shadow ease-in-out .15s;
+                transition: border-color ease-in-out .15s,box-shadow ease-in-out .15s
             }
-
-            .header_select_time{
-                height: 100%;
-                width: 250px;
+            .input_ship:focus{
+                border-color: #66afe9;
+                outline: 0;
+                -webkit-box-shadow: inset 0 1px 1px rgba(0,0,0,.075),0 0 8px rgba(102,175,233,.6);
+                box-shadow: inset 0 1px 1px rgba(0,0,0,.075),0 0 8px rgba(102,175,233,.6)
+            }
+            /*日期起止样式*/
+            .input_time{
                 float: left;
-                margin-left: 5px;
-                margin-right: 5px;
-                background-color: #8a1f11;
+                margin: 5px auto 5px auto;
+                height: 28px;
+                margin-top: 2px;
+            }
+            /*日期文字*/
+            .input_title{
+                float: left;
+                margin: 8px 10px 8px 10px;
+                height: 28px;
+                text-align: center;
+            }
+            /*播放按钮*/
+            .player_btn{
+                width: 40px;
+                height: 40px;
+                margin-left: 30px;
+                float: left;
             }
 
         </style>
@@ -79,30 +119,42 @@
     </head>
 
     <body>
-        <div id="header" class="he">
-            <div class="header_select_ship"></div>
-            <div class="header_select_time"></div>
-            <div class="header_button header_button_select">查询</div>
-            <div class="header_button header_button_delete">撤销</div>
-            <!--<div class="header_css"><input type="button"  onclick="openHeatmap();" value="显示热力图"/></div>-->
-            <!--<div class="header_css"><input type="button"  onclick="closeHeatmap();" value="关闭热力图"/></div>-->
+        <div id="header">
+            <input class="input_ship" value="请输入待查找的渔船编号...">
+            <p class="input_title">开始时间</p>
+            <input class="input_time" type="date" value="2015-09-24" />
+            <p class="input_title">结束时间</p>
+            <input class="input_time" type="date" value="2015-09-24" />
+            <button class="btn" onclick="openHeatmap()">加载热力图</button>
+            <button class="btn" onclick="openHeatmap()">保存热力图</button>
+            <button class="btn" onclick="closeHeatmap()">关闭热力图</button>
+            <button class="btn" onclick="openHeatmap()">生成热力图</button>
         </div>
         <!--地图主体-->
         <div id="container"></div>
-        <!--<div id="r-result">-->
-            <!--<input type="button"  onclick="openHeatmap();" value="显示热力图"/>-->
-            <!--<input type="button"  onclick="closeHeatmap();" value="关闭热力图"/>-->
-        <!--</div>-->
+        <!--播放器-->
+        <div id="play">
+            <div id="player">
+                <button class="player_btn">后退</button>
+                <button class="player_btn">播放</button>
+                <button class="player_btn">前进</button>
+            </div>
+        </div>
+
     </body>
 
 </html>
 
     <script type="text/javascript">
-        var map = new BMap.Map("container");          // 创建地图实例
+
+        // 创建地图实例
+        var map = new BMap.Map("container");
 
         var point = new BMap.Point(116.418261, 39.921984);
-        map.centerAndZoom(point, 15);             // 初始化地图，设置中心点坐标和地图级别
-        map.enableScrollWheelZoom(); // 允许滚轮缩放
+        // 初始化地图，设置中心点坐标和地图级别
+        map.centerAndZoom(point, 15);
+        // 允许滚轮缩放
+        map.enableScrollWheelZoom();
 
         var points =[
             {"lng":116.418261,"lat":39.921984,"count":50},
