@@ -154,13 +154,10 @@
 
         // 创建地图实例
         var map = new BMap.Map("container");
-
-        // 创建点坐标
+        // 创建地图初始中心点坐标
         var point = new BMap.Point(122.36302, 29.9342);
-
         // 初始化地图，设置中心点坐标和地图级别
         map.centerAndZoom(point, 12);
-
         // 允许滚轮缩放
         map.enableScrollWheelZoom();
         map.addControl(new BMap.OverviewMapControl);
@@ -168,16 +165,19 @@
         // map.disableDragging();
 
         // 获取当前地图可视情况
-        // var bs = map.getBounds();
-        // var bssw = bs.getSouthWest();
-        // var bsne = bs.getNorthEast();
-        // alert("当前地图可视范围是：" + bssw.lng + "," + bssw.lat + "到" + bsne.lng + "," + bsne.lat);
+        function getVisiableInfo() {
+            var bs = map.getBounds();
+            var bssw = bs.getSouthWest();
+            var bsne = bs.getNorthEast();
+            console.log("当前地图可视范围是：" + bssw.lng + "," + bssw.lat + " - " + bsne.lng + "," + bsne.lat);
+        }
 
         // 计算两个点的距离 单位为米 保留两位小数点
-        // var pointA = new BMap.Point(106.486654, 29.490295);
-        // var pointB = new BMap.Point(106.5815151, 29.615467);
-        // var pointB = new BMap.Point(106.581515,29.615467);  // 创建点坐标B--江北区
-        // alert((map.getDistance(pointA, pointB)).toFixed(2));
+        function calDistance() {
+            var pointA = new BMap.Point(106.486654, 29.490295);
+            var pointB = new BMap.Point(106.5815151, 29.615467);
+            console.log((map.getDistance(pointA, pointB)).toFixed(2));
+        }
 
         // 添加带有定位的导航控件
         var navigationControl = new BMap.NavigationControl({
@@ -188,6 +188,7 @@
             // 启用显示定位
             enableGeolocation: true // 会多出一个点
         });
+
         map.addControl(navigationControl);
 
         // 添加右下角缩略图
@@ -197,6 +198,7 @@
             // 是否打开
             isOpen:true
         });
+
         map.addControl(map_overview);
 
         // 设置地图风格
@@ -204,12 +206,6 @@
         //     style: "mapbox"
         // };
         // map.setMapStyle(mapStyle);
-
-        // 单条数据格式: 经纬度&权重
-        // var points = [
-        //
-        //     ];
-
 
         if(!isSupportCanvas()){
             alert('热力图目前只支持有canvas支持的浏览器,您所使用的浏览器不能使用热力图功能~')
@@ -238,8 +234,6 @@
         });
         // 添加图层
         map.addOverlay(heatmapOverlay);
-        // 添加数据
-        // heatmapOverlay.setDataSet({data:points, max:100});
 
         //是否显示热力图
         function openHeatmap(){
@@ -254,64 +248,104 @@
 
         // 热力图数据源
         var points=[];
-        // 更新数据源
-        function updateHeatmap(){
-            points=[];
-            for(var i=0;i<100;i++){
-                var x = Math.random() * 9999;
-                var y = Math.random() * 9999;
-                var xStr = "116.41" + x;
-                var yStr = "39.91" + y;
-                points.push({"lng":parseFloat(xStr),"lat":parseFloat(yStr),"count":50});
-            }
-            heatmapOverlay.setDataSet({data:points,max:100});
-        }
 
+        // 当前热力图的下表 全局
         var heatmap_data_index = 0;
+
+        // 更新热力图的函数
         function my_updateHeatmap() {
+            // 置空
             points=[];
+            // 获取当前JSON对象
             var obj = JSON.parse(golbal_json);
 
             // console.log("共有"+obj.length+"天的数据");
-            console.log(obj[heatmap_data_index].datetime);
-            console.log(obj[heatmap_data_index].data);
-            console.log(obj[heatmap_data_index].index);
+            // console.log(obj[heatmap_data_index].datetime);
+            // console.log(obj[heatmap_data_index].data);
+            // console.log(obj[heatmap_data_index].index);
 
+            // 获取具体的JSON数据
             points = obj[heatmap_data_index].data;
-
+            // 数据装填
             heatmapOverlay.setDataSet({data:points,max:100});
-
+            // 全局下标自增
             heatmap_data_index++;
         }
 
+        // 检查当前是否处于播放状态
+        var is_playing = false;
+        // 全局定时器对象
+        var interval;
         // 播放
         function play() {
-            // 打开热力图
-            heatmapOverlay.show();
-            // 设置定时执行
-            setInterval(function() {updateHeatmap();}, 1000);
-        }
-        // 前进
-        function forward() {
-            console.log(golbal_json)
-        }
-        function backward() {
-            // JSON字符串转对象
-            var obj = JSON.parse(golbal_json);
-            // 打开热力图
-            heatmapOverlay.show();
-            // 设置定时执行
-            var interval = setInterval(function() {
-                my_updateHeatmap();
-
-                if(heatmap_data_index >= obj.length)
-                    clearInterval(interval);
+            // 判断是否处于播放状态
+            if(is_playing==true){
+                clearInterval(interval);
+                is_playing = false;
+            }
+            else{
+                is_playing = true;
+                // JSON字符串转对象
+                var obj = JSON.parse(golbal_json);
+                // 打开热力图
+                heatmapOverlay.show();
+                // 设置定时执行
+                interval = setInterval(function() {
+                    my_updateHeatmap();
+                    if(heatmap_data_index >= obj.length){
+                        clearInterval(interval);
+                        heatmap_data_index = 0;
+                    }
                 }, 100);
-            
+            }
+
             // console.log("共有"+obj.length+"天的数据");
             // console.log(obj[0].datetime);
             // console.log(obj[0].data);
             // console.log(obj[0].index);
+
+        }
+
+        // 前进
+        function forward() {
+            // 先停止播放
+            if(is_playing==true){
+                clearInterval(interval);
+                is_playing = false;
+            }
+            // 判断当前是否已经帧数是否要越界
+            var obj = JSON.parse(golbal_json);
+            if(heatmap_data_index==obj.length-1){
+                alert("已经播放到最后一天 无法前进");
+                return;
+            }
+            // 先下标自增
+            heatmap_data_index++;
+            // 获取具体的JSON数据
+            points = obj[heatmap_data_index].data;
+            // 数据装填
+            heatmapOverlay.setDataSet({data:points,max:100});
+        }
+
+        // 后退
+        function backward() {
+            // 先停止播放
+            if(is_playing==true){
+                clearInterval(interval);
+                is_playing = false;
+            }
+            // 判断当前是否已经帧数是否要越界
+            var obj = JSON.parse(golbal_json);
+            if(heatmap_data_index==0){
+                alert("已经播放到第一天 无法前进");
+                return;
+            }
+            // 先下标自增
+            heatmap_data_index--;
+            // 获取具体的JSON数据
+            points = obj[heatmap_data_index].data;
+            // 数据装填
+            heatmapOverlay.setDataSet({data:points,max:100});
 
         }
 
@@ -337,7 +371,7 @@
             // 回调函数
             reader.onload = function (ev) {
                 // 给全局变量赋值
-                golbal_json =  ev.target.result;
+                golbal_json = ev.target.result;
             };
         }
 
