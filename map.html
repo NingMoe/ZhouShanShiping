@@ -156,10 +156,10 @@
         var map = new BMap.Map("container");
 
         // 创建点坐标
-        var point = new BMap.Point(116.418261, 39.921984);
+        var point = new BMap.Point(122.36302, 29.9342);
 
         // 初始化地图，设置中心点坐标和地图级别
-        map.centerAndZoom(point, 15);
+        map.centerAndZoom(point, 12);
 
         // 允许滚轮缩放
         map.enableScrollWheelZoom();
@@ -267,6 +267,23 @@
             heatmapOverlay.setDataSet({data:points,max:100});
         }
 
+        var heatmap_data_index = 0;
+        function my_updateHeatmap() {
+            points=[];
+            var obj = JSON.parse(golbal_json);
+
+            // console.log("共有"+obj.length+"天的数据");
+            console.log(obj[heatmap_data_index].datetime);
+            console.log(obj[heatmap_data_index].data);
+            console.log(obj[heatmap_data_index].index);
+
+            points = obj[heatmap_data_index].data;
+
+            heatmapOverlay.setDataSet({data:points,max:100});
+
+            heatmap_data_index++;
+        }
+
         // 播放
         function play() {
             // 打开热力图
@@ -279,10 +296,23 @@
             console.log(golbal_json)
         }
         function backward() {
+            // JSON字符串转对象
             var obj = JSON.parse(golbal_json);
+            // 打开热力图
+            heatmapOverlay.show();
+            // 设置定时执行
+            var interval = setInterval(function() {
+                my_updateHeatmap();
+
+                if(heatmap_data_index >= obj.length)
+                    clearInterval(interval);
+                }, 100);
             
-            console.log("共有"+obj.length+"天的数据");
-            console.log(obj[0].datetime);
+            // console.log("共有"+obj.length+"天的数据");
+            // console.log(obj[0].datetime);
+            // console.log(obj[0].data);
+            // console.log(obj[0].index);
+
         }
 
         // 判断浏览器是否支持FileReader
