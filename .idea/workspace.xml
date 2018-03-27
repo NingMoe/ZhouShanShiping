@@ -27,8 +27,8 @@
       <file leaf-file-name="map.html" pinned="false" current-in-tab="true">
         <entry file="file://$PROJECT_DIR$/map.html">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="511">
-              <caret line="262" column="50" lean-forward="false" selection-start-line="262" selection-start-column="44" selection-end-line="262" selection-end-column="50" />
+            <state relative-caret-position="261">
+              <caret line="282" column="12" lean-forward="false" selection-start-line="282" selection-start-column="12" selection-end-line="282" selection-end-column="12" />
               <folding />
             </state>
           </provider>
@@ -48,12 +48,15 @@
     <findStrings>
       <find>左侧导航</find>
       <find>hAd</find>
-      <find>openHeatmap</find>
       <find>button</find>
       <find>index_v1</find>
       <find>container</find>
       <find>visible</find>
       <find>points</find>
+      <find>openHeatmap</find>
+      <find>play</find>
+      <find>updateHeatmap</find>
+      <find>backward</find>
     </findStrings>
   </component>
   <component name="Git.Settings">
@@ -76,10 +79,11 @@
     <detection-done>true</detection-done>
     <sorting>DEFINITION_ORDER</sorting>
   </component>
-  <component name="ProjectFrameBounds" extendedState="1">
-    <option name="x" value="-7" />
+  <component name="ProjectFrameBounds">
+    <option name="x" value="22" />
+    <option name="y" value="16" />
     <option name="width" value="1285" />
-    <option name="height" value="1047" />
+    <option name="height" value="1072" />
   </component>
   <component name="ProjectView">
     <navigator currentView="ProjectPane" proportions="" version="1">
@@ -156,15 +160,15 @@
       <workItem from="1521700726690" duration="76000" />
       <workItem from="1521700881018" duration="15151000" />
       <workItem from="1521804767989" duration="9140000" />
-      <workItem from="1521876166871" duration="1853000" />
+      <workItem from="1521876166871" duration="14935000" />
     </task>
     <servers />
   </component>
   <component name="TimeTrackingManager">
-    <option name="totallyTimeSpent" value="34528000" />
+    <option name="totallyTimeSpent" value="47610000" />
   </component>
   <component name="ToolWindowManager">
-    <frame x="-7" y="0" width="1285" height="1047" extended-state="1" />
+    <frame x="22" y="16" width="1285" height="1072" extended-state="0" />
     <editor active="true" />
     <layout>
       <window_info id="Project" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.1316923" sideWeight="0.5" order="0" side_tool="false" content_ui="combo" />
@@ -318,8 +322,8 @@
     </entry>
     <entry file="file://$PROJECT_DIR$/map.html">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="511">
-          <caret line="262" column="50" lean-forward="false" selection-start-line="262" selection-start-column="44" selection-end-line="262" selection-end-column="50" />
+        <state relative-caret-position="261">
+          <caret line="282" column="12" lean-forward="false" selection-start-line="282" selection-start-column="12" selection-end-line="282" selection-end-column="12" />
           <folding />
         </state>
       </provider>

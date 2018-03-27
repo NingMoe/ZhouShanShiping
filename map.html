@@ -126,6 +126,10 @@
             <input class="input_time" type="date" value="2015-09-24" />
             <p class="input_title">结束时间</p>
             <input class="input_time" type="date" value="2015-09-24" />
+
+            <input type="file" id="file" value="打开" multiple="" onchange="read_files(this.files)">
+
+
             <button class="btn" onclick="openHeatmap()">加载热力图</button>
             <button class="btn" onclick="openHeatmap()">保存热力图</button>
             <button class="btn" onclick="closeHeatmap()">关闭热力图</button>
@@ -136,9 +140,9 @@
         <!--播放器-->
         <div id="play">
             <div id="player">
-                <button class="player_btn">后退</button>
+                <button class="player_btn" onclick="backward()">后退</button>
                 <button class="player_btn" onclick="play()">播放</button>
-                <button class="player_btn" >前进</button>
+                <button class="player_btn" onclick="forward()">前进</button>
             </div>
         </div>
 
@@ -262,9 +266,49 @@
             }
             heatmapOverlay.setDataSet({data:points,max:100});
         }
-        
+
+        // 播放
         function play() {
-            setInterval(function() {updateHeatmap();}, 2000);
+            // 打开热力图
+            heatmapOverlay.show();
+            // 设置定时执行
+            setInterval(function() {updateHeatmap();}, 1000);
+        }
+        // 前进
+        function forward() {
+            console.log(golbal_json)
+        }
+        function backward() {
+            var obj = JSON.parse(golbal_json);
+            
+            console.log("共有"+obj.length+"天的数据");
+            console.log(obj[0].datetime);
+        }
+
+        // 判断浏览器是否支持FileReader
+        if(typeof FileReader === 'undefined'){
+            console.log("抱歉 你的浏览器不支持 FileReader")
+        }
+
+        // 保存本地读取&后台返回的JSON数据
+        var golbal_json = "";
+
+        // 从本地读取JSON文件
+        function read_files(fileArray) {
+            // 获取input的文件名
+            var selectedFile = document.getElementById("file").files[0];
+            // 获取文件名&大小
+            var name = selectedFile.name;
+            var size = selectedFile.size;
+            // console.log(name+"--"+size);
+            //读取文件
+            var reader = new FileReader();
+            reader.readAsText(selectedFile);
+            // 回调函数
+            reader.onload = function (ev) {
+                // 给全局变量赋值
+                golbal_json =  ev.target.result;
+            };
         }
 
         function setGradient(){
